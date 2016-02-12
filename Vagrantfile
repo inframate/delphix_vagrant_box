@@ -12,16 +12,23 @@ VB_CPUS=1
 DOMAIN_NAME="delphix.local"
 SETUP_HOME='/home/delphix'
 
-IP_BASE = '172.16.138'
+# network setup
+ENGINE_IP ||= ENV['ENGINE_IP'] || '172.16.138.157'
+NETWORK_ADAPTER ||= ENV['NETWORK_ADAPTER'] || 'vmnet8'
+IP_BASE = ENGINE_IP.split('.')[0..2].join('.')
+PUBLIC_IPV4 = "#{IP_BASE}.66"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Every Vagrant environment requires a box to build off of.
   config.vm.box = "bento/centos-7.1"
+  config.ssh.insert_key = false # force re-creation on a new box, see https://github.com/mitchellh/vagrant/issues/5186
 
   # network config to get this box going
-  config.vm.hostname = "box.#{DOMAIN_NAME}"
-  config.vm.network "public_network", ip: "#{IP_BASE}.100"
+  config.vm.define vm_name = "box.#{DOMAIN_NAME}" do |box|
+    box.vm.hostname = "box.#{DOMAIN_NAME}"
+    box.vm.network "public_network", ip: PUBLIC_IPV4, bridge: NETWORK_ADAPTER
+  end
 
   # size of the box
   config.vm.provider :virtualbox do |vb|

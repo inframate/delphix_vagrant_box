@@ -7,3 +7,4 @@
 .bash_*
 .ssh
 .DS_Store
+*.box
