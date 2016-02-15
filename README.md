@@ -6,7 +6,7 @@ The base box used for various Delphix DevOps demos.
 
 #### Package
 
-  $ vagrant package --base my-virtual-machine
+  $ vagrant package --base my-virtual-machine --output /path/to/the/new.box
 
 #### Import
 
